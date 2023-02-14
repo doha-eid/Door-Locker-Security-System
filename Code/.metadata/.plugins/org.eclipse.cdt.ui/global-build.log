@@ -1,0 +1,357 @@
+01:15:02 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14488 bytes (88.4% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:20:32 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:20:33 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14488 bytes (88.4% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:23:59 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:24:00 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Building file: ../app.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=8000000UL -MMD -MP -MF"app.d" -MT"app.o" -c -o "app.o" "../app.c"
+In file included from ../app.h:19,
+                 from ../app.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../app.c
+ 
+Building target: MCU1.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,MCU1.map -mmcu=atmega16 -o "MCU1.elf"  ./app.o ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer.o ./uart.o   
+Finished building target: MCU1.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S MCU1.elf  >"MCU1.lss"
+Finished building: MCU1.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14734 bytes (89.9% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:25:42 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:25:43 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=8000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../app.h:19,
+                 from ../main.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../main.c
+ 
+Building target: MCU1.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,MCU1.map -mmcu=atmega16 -o "MCU1.elf"  ./app.o ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer.o ./uart.o   
+Finished building target: MCU1.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S MCU1.elf  >"MCU1.lss"
+Finished building: MCU1.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   15092 bytes (92.1% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:27:14 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+01:27:14 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=8000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../app.h:19,
+                 from ../main.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../main.c
+ 
+Building target: MCU1.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,MCU1.map -mmcu=atmega16 -o "MCU1.elf"  ./app.o ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer.o ./uart.o   
+Finished building target: MCU1.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S MCU1.elf  >"MCU1.lss"
+Finished building: MCU1.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14734 bytes (89.9% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+09:06:25 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+09:06:25 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Building file: ../app.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=8000000UL -MMD -MP -MF"app.d" -MT"app.o" -c -o "app.o" "../app.c"
+In file included from ../app.h:19,
+                 from ../app.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../app.c
+ 
+Building target: MCU1.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,MCU1.map -mmcu=atmega16 -o "MCU1.elf"  ./app.o ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer.o ./uart.o   
+Finished building target: MCU1.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S MCU1.elf  >"MCU1.lss"
+Finished building: MCU1.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14484 bytes (88.4% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+09:07:31 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+09:07:31 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=8000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../app.h:19,
+                 from ../main.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../main.c
+ 
+Building target: MCU1.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,MCU1.map -mmcu=atmega16 -o "MCU1.elf"  ./app.o ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer.o ./uart.o   
+Finished building target: MCU1.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S MCU1.elf  >"MCU1.lss"
+Finished building: MCU1.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14478 bytes (88.4% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+09:08:20 **** Incremental Build of configuration Debug for project MC2 ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MC2.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:    9018 bytes (55.0% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (4.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+09:08:20 **** Incremental Build of configuration Debug for project MCU1 ****
+make all 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=8000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../app.h:19,
+                 from ../main.c:10:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../main.c
+ 
+Building target: MCU1.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,MCU1.map -mmcu=atmega16 -o "MCU1.elf"  ./app.o ./gpio.o ./keypad.o ./lcd.o ./main.o ./timer.o ./uart.o   
+Finished building target: MCU1.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S MCU1.elf  >"MCU1.lss"
+Finished building: MCU1.lss
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega16 MCU1.elf
+AVR Memory Usage
+----------------
+Device: atmega16
+
+Program:   14484 bytes (88.4% Full)
+(.text + .data + .bootloader)
+
+Data:        328 bytes (32.0% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 

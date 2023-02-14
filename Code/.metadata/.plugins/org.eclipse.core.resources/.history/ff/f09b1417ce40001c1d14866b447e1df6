@@ -1,0 +1,224 @@
+/***********************************************************************************************************
+ * Module:Application2
+ *
+ * File Name :app2.c
+ *
+ * Description:Source file for the application
+ *      Author: Doha Eid
+ **********************************************************************************************************/
+#include"app2.h"
+#include"common_macros.h"
+
+
+/***********************************************************************************************************
+ *                                             Global variables                                           *
+ **********************************************************************************************************/
+/*global variable determine in which step the code is*/
+uint8 volatile g_step=0;
+/*global variables for timer*/
+uint16 volatile g_tick=0;
+uint16 volatile g_seconds_counted=0;
+uint16 volatile g_required_seconds=0;
+/*Global variable to pass that saved in eeprom*/
+uint8 checkPass=0;
+/*The passwords that i received from MCU1 */
+	uint8 pass1[5];
+	uint8 pass2[5];
+
+	/*global variable to receive the symbols from keypad*/
+	uint8 symbol=0;
+	/*global variables to check the 3 attempts of the password */
+	uint8 attempts=0;
+	uint8 counter=0;
+	/*Global configuration for timer1 */
+	Timer_ConfigType configure = { Timer0, Normal, F_CPU_1024, No_clock2, 0 };
+
+/***********************************************************************************************************
+ *                                           Function Definitions                                          *
+ **********************************************************************************************************/
+/*
+ * Description :
+ *Function that  receive the passwords from the MCU1
+ */
+void recieve_Pass(void)
+{
+
+	uint8 i;
+	/*Receiving the first password from the MCU1*/
+	for(i=0;i<5;i++)
+	{
+		pass2[i]=UART_recieveByte();
+	}
+}
+
+
+/*
+ * Description:
+ * Function that check if the two passwords is matching or not
+ */
+//uint8 check_Pass(uint8 *ptr1,uint8 *ptr2)
+//{
+//	int i;
+//	for(i=0;i<5;i++)
+//	{
+//		if (ptr1[i]=ptr2[i]){
+//			return 0;
+//		}
+//		else
+//		{
+//			return 1;
+//		}
+//	}
+//}
+/*
+ * Description :Function checks if the password is matching with the saved in eeprom or not
+ */
+uint8 pass_with_eeprom()
+{
+	uint8 k;
+	for(k=0;k<5;k++)
+	{
+		/*read the password from eeprom*/
+		EEPROM_readByte(ADDRESS+k,&pass1[k]);
+		if (pass1[k]!=pass2[k])
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+}
+/*
+ * Description :
+ * Function checks if there is saved password in the EEprom or not
+ * and the initial value of eeprom 0xFF
+ * the value of variable determine which step the code runs
+ */
+uint8 check_eeprom(void)
+{
+	uint8 step=0;
+	 EEPROM_readByte(ADDRESS, &checkPass);
+	    	if (checkPass !=0xFF){
+	    		step=2;
+ 		  UART_sendByte(step);
+	    	}else{
+	    		step=0;
+    		UART_sendByte(step);
+	    	}
+return step;
+}
+/*
+ * Description :
+ * Function that read the password from eeprom
+ */
+void read_From_EEPROM(void )
+{
+
+	uint8 x;
+	for (x=0;x<5;x++)
+	{
+		pass1[x]=EEPROM_readByte(ADDRESS+x,&pass1);
+		_delay_ms(10);
+	}
+
+}
+/*
+ * Description:
+ * Function to save the password at EEPROM
+ */
+void save_at_eeprom()
+{
+	uint8 j;
+	for (j=0;j<5;j++)
+	{
+		EEPROM_writeByte(ADDRESS+j,pass2[j]);
+		_delay_ms(10);
+	}
+}
+/*
+ * Description:
+ * Function that using timer to count
+ * it is call back function of timer
+ */
+void timer_count(void)
+{
+
+	/*increases the global tick each time the timer interrupt*/
+	g_tick++;
+	/*
+	 * check if the timer count second
+	 */
+
+}
+
+void timer(uint8 volatile g_seconds_required) {
+	Timer_Init(&configure);
+	while (g_tick != ((NUMBER_OF_OVERFLOWS_PER_SECOND) * g_seconds_required) )
+		;
+	Timer_DeInit(&configure);
+	g_tick = 0;
+
+}
+/*
+ * Description:
+ * Function to receive from the main list
+ */
+void receice_Main_List(void)
+{
+	symbol=UART_recieveByte();
+	    	if (symbol=='*')
+	    	{
+	    		g_step=3;
+	    	}
+	    	else if (symbol=='-')
+	    	{
+	    		g_step=4;
+	    	}
+}
+/*
+ * Description:
+ * Function that turn on the dc motor
+ */
+void matched_State(void)
+{
+	        DcMotor_Rotate(Clock_Wise);
+			timer(15);
+			DcMotor_Rotate(Stop);
+			timer(3);
+			DcMotor_Rotate(Anti_Clock_Wise);
+			timer(15);
+			DcMotor_Rotate(Stop);
+}
+
+/*
+ * Description:
+ * Function that change password
+ */
+void Change_Password(void)
+{
+	uint8 checking,pass[5];
+	/*Receive the pass from MCU1*/
+	  read_From_EEPROM();
+	  while(UART_recieveByte()!=M1_READY);
+	  UART_sendByte(pass2[5]);
+	  while(UART_recieveByte()!=M1_READY);
+	  pass[5]=UART_recieveByte();
+	  save_at_eeprom(pass[5]);
+
+}
+/*
+ * Description :
+ * Function that when we enter the password 3 times wrong turn on the buzzer for 60 seconds
+ */
+void wrong_Passwords(void)
+{
+	/*Turn on the buzzer for 60 seconds */
+	    	  Buzzer_ON();
+	    	  timer(60);
+	    	  /*Stop the buzzer and timer  after 60 seconds  */
+	    	  	Timer_ConfigType configure={Timer0};
+	    	  	Timer_DeInit(&configure);
+	    	  Buzzer_OFF();
+}

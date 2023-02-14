@@ -1,0 +1,170 @@
+/***********************************************************************************************************
+ * Module:Main application
+ *
+ * File Name :main.c
+ *
+ *  Description: Main application that executes
+ *    4  Author: Doha Eid
+ **********************************************************************************************************/
+#include"app2.h"
+Timer_ConfigType config={Timer0,Normal,F_CPU_1024,No_clock2,0,250};
+int main (void)
+{
+	/*Initialize the buzzer*/
+	Buzzer_Init();
+	/*Initialize the DC_Motor*/
+	DcMotor_Init();
+	/* Initialize the UART driver with Baud-rate = 9600 bits/sec */
+	UART_Config uart_ptr={9600,bit_8,disable,bit_1};
+	UART_init(&uart_ptr);
+	/*Initialize the I2C driver */
+	I2C_Configure I2C_config={value_1,ADDRESS};
+	TWI_init(&I2C_config);
+    /*Initialize the timer */
+	Timer0_setCallBack(timer_count);
+
+	Timer_Init(&config);
+	/*Enable global interrupt I-Bit*/
+    SREG|=(1<<7);
+    /*wait until the MCU1 is ready to send the step */
+    //   while(UART_recieveByte()!=M1_READY);
+       g_step=0;
+       // UART_sendByte(g_step);
+
+
+
+	while (1)
+	{
+
+    switch (g_step)
+      {
+    /*Step 0 that the first time you save password in eeprom
+     *there is no password saved in eeprom
+     */
+    case 0:
+    	/*Receive the first try password
+    	 *And wait 1msec to receive the next password
+    	 */
+    //	UART_sendByte(M2_READY);
+    	recieve_Pass();
+    	g_step=1;
+    	break;
+      /*
+       *At this case we save the new password at eeprom after check if the two passwords matching or not
+       */
+    case 1:
+    	/*Its time to write the password at eeprom */
+    	save_at_eeprom();
+    	g_step=2;
+    	break;
+    	/*
+    	 * This is the main step because at the MCU2 is ready to MCU1
+    	 * receive from the MCU1 where the code on
+    	 */
+    case 2:
+    	//UART_sendByte(M2_READY);
+    	receice_Main_List();
+
+       break;
+       /*
+        * At this case there is 3 attempts to enter the pass correct
+        * If the pass not correct the buzzer will turn on
+        */
+    case 3:
+    	//UART_sendByte(M2_READY);
+    	/*Receive the pass from MCU1*/
+    	recieve_Pass();
+    	/*check if the receive pass matching with the saved one or not */
+    	attempts=pass_with_eeprom();
+    	/*send the attempts */
+    	//UART_sendByte(M2_READY);
+    	UART_sendByte(attempts);
+    	/*check if the user try the 3 attempts or not */
+    	if(attempts==0)
+    	{
+    		counter++;
+    		/*the user run out the range (3attempts) so turn the buzzer  */
+    		if(counter==3)
+    		{
+    			counter=0;
+    			g_step=5;
+        		/*send the step where the code are */
+        		UART_sendByte(g_step);
+    			//break;
+    		}
+    		UART_sendByte(g_step);
+
+    	}
+    	else if (attempts==1)
+    	{
+    		/*
+    		 *If the pass is correct then make the counter=0
+    		 * And make the timer0 count 15 seconds
+    		 * Turn on the motor to rotate cw
+    		 * And wait this step to finish to go to the main list
+    		 */
+    		counter=0;
+    		//UART_sendByte(M2_READY);
+    		recieve_Pass();
+    		save_at_eeprom();
+    		matched_State();
+
+    	}
+    break;
+/*
+ * This case reset the password by entering the old one and change it
+ * There are 3 attempts for entering the password correct
+ */
+    case 4:
+    	       while(counter != 3){
+    		//	UART_sendByte(M2_READY);
+    	    	/*Receive the pass from MCU1*/
+    	    	recieve_Pass();
+    	    	/*check if the receive pass matching with the saved one or not */
+    	    	attempts=pass_with_eeprom();
+    	    	/*send the attempts */
+    	    	//UART_sendByte(M2_READY);
+    	    	UART_sendByte(attempts);
+    	    	/*check if the user try the 3 attempts or not */
+    	    	if(attempts==0)
+    	    	{
+    	    		counter++;
+    	    		/*the user run out the range (3attempts) so turn the buzzer  */
+    	    		if(counter==3)
+    	    		{
+    	    			counter=0;
+    	    			g_step=5;
+    	    		}
+    	    		/*send the step where the code are */
+    	    		UART_sendByte(g_step);
+    	    	}
+    	    	else if (attempts==1)
+    	    	{
+    	    		/*
+    	    		 *If the pass is correct then make the counter=0
+    	    		 * And make the timer0 count 15 seconds
+    	    		 * Turn on the motor to rotate cw
+    	    		 * And wait this step to finish to go to the main list
+    	    		 */
+    	    		counter=0;
+    	    		//UART_sendByte(M2_READY);
+    	    		_delay_ms(1000);
+    	    		save_at_eeprom();
+
+    	    	}
+    	       }
+    	    	break;
+    	   /*the code will run this case in case the user entered wrong password for 3 times
+    	    *make the timer count 60 seconds
+    	    *Turn on the buzzer for 60 seconds
+    	    */
+    case 5:
+    	wrong_Passwords();
+    	receice_Main_List();
+    	  break;
+
+      }
+	}
+}
+
+

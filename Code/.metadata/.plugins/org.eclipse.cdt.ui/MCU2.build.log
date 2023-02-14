@@ -1,0 +1,7 @@
+09:54:08 **** Clean-only build of configuration Debug for project MCU2 ****
+make clean 
+rm -rf  ./DC_Motor.o ./app2.o ./buzzer.o ./external_eeprom.o ./gpio.o ./main.o ./timer.o ./twi.o ./uart.o  sizedummy  MCU2.lss  ./DC_Motor.d ./app2.d ./buzzer.d ./external_eeprom.d ./gpio.d ./main.d ./timer.d ./twi.d ./uart.d  MCU2.elf
+ 
+
+09:54:08 Build Finished. 0 errors, 0 warnings. (took 147ms)
+

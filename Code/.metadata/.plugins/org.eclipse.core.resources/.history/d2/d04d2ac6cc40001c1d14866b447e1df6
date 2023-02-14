@@ -1,0 +1,70 @@
+/*********************************************************************************************************
+ * Module :UART
+ *
+ * File Name :uart.h
+ *
+ *  Description: Header file for the UART driver
+ *      Author: Doha Eid
+ *********************************************************************************************************/
+
+#ifndef UART_H_
+#define UART_H_
+#include"std_types.h"
+/***********************************************************************************************************
+ *                                      Definitions                                                        *
+ **********************************************************************************************************/
+#define BAUD_RATE 9600
+/***********************************************************************************************************
+ *                                       Type Deceleration                                                 *
+ **********************************************************************************************************/
+typedef enum
+{
+	bit_5,bit_6,bit_7,bit_8,reversed_data
+}Bit_Data;
+typedef enum
+{
+    disable,reversed_parity,Enabeld_evenparity,Enabled_oddparity
+}Type_Of_Parity;
+typedef enum
+{
+	bit_1,bit2
+}Stop_Bit;
+typedef struct
+{
+	Bit_Data bit_data;
+	Type_Of_Parity parity;
+	Stop_Bit stop_bit;
+}UART_Config;
+/***********************************************************************************************************
+ *                                     Function Prototypes                                                 *
+ *********************************************************************************************************/
+/*
+ * Description:
+ * Function responsible for initialize the UART device by :
+ * set up the frame format like the parity bit type , number of data bits and number of stop bits
+ * Enable the UART
+ * set up the UART baud rate
+ */
+void UART_init(const UART_Config *uart_ptr);
+/*
+ * Description:
+ * Function responsible for send byte to another UART device
+ */
+void UART_sendByte(const uint8 data );
+/*
+ * Description:
+ * Function responsible for receive byte from the another UART device
+ */
+uint8 UART_recieveByte(void );
+/*
+ * Description :
+ * Send the required string through UART to the other UART device.
+ */
+void UART_sendString(const uint8 *Str);
+/*
+ * Description :
+ * Receive the required string until the '#' symbol through UART from the other UART device.
+ */
+void UART_receiveString(uint8 *Str);
+
+#endif /* UART_H_ */

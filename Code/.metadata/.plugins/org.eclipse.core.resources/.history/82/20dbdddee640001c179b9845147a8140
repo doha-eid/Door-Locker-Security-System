@@ -1,0 +1,108 @@
+/***********************************************************************************************************
+ * Module :Application
+ *
+ * File Name :app1.h
+ *
+ * Description :Header file for the application
+ *
+ *      Author: Doha Eid
+ **********************************************************************************************************/
+
+#ifndef APP_H_
+#define APP_H_
+
+#include"std_types.h"
+#include"timer.h"
+#include"keypad.h"
+#include"lcd.h"
+#include"uart.h"
+#include<util/delay.h>
+#include<avr/io.h>
+#include<avr/interrupt.h>
+
+/***********************************************************************************************************
+ *                                         Definitions                                                    *
+ **********************************************************************************************************/
+#define NUMBER_OF_OVERFLOWS_PER_SECOND 32
+#define M1_READY 0x20
+#define M2_READY 0x10
+/***********************************************************************************************************
+ *                                        Extern Variables                                                 *
+ **********************************************************************************************************/
+extern uint16 volatile g_tick ;
+extern uint8 volatile g_seconds_counted;
+extern uint8 volatile g_seconds_required;
+extern uint8 volatile g_step;
+extern uint8 password_send[5];
+extern uint8 password_check[5];
+extern uint8 i;
+extern uint8 do_case;
+extern uint8 volatile option_key;
+extern uint8 volatile checker;
+extern uint8 volatile checking_value;
+/***********************************************************************************************************
+ *                                       Function Prototypes                                               *
+ **********************************************************************************************************/
+
+/*
+ * Description :
+ * call back function of timer to count the seconds that we need
+ */
+void timer_count(void);
+void timer(uint8 volatile g_seconds_required);
+/*
+ * Description:
+ * Function that take the password twice from the keypad and display on LCD as *
+ */
+void Enter_Password(void);
+/*
+ * Description :
+ * Function to compare if the two passwords are matching or not
+ */
+void check_Password();
+/*
+ * Description:
+ * Function to send the password to the MCU2 by uart
+ */
+void send_Pass_ToMcu2(void) ;
+/*
+ * Description :
+ * Function to compare the passwords
+ */
+uint8 comp_Password(uint8 step);
+
+/*
+ * Description:
+ * Function to decide open the door or change the password
+ * option list from *.open
+ * -. change password
+ */
+void options_list(void);
+/*
+ * Description :
+ * Function that take the password once from the keypad and store at array
+ */
+void enter_saved_pass(void);
+/*
+ * Description :
+ * Function that receive if the pass was correct or not and if correct open the door
+ */
+void check_Pass(uint8 check_password);
+/*
+ * Description:
+ * Function that display the main list of the system
+ */
+void main_List(void);
+/*
+ * DEscription :
+ * Function that display on the lcd when the door is opening and closing
+ */
+void matched_State(void);
+/*
+ * Description :
+ * Function that when we enter the password 3 times wrong display message on the lcd
+ * for the 60 seconds
+ * then return to main list
+ */
+void wrong_Passwords(void);
+#endif /* APP_H_ */

@@ -1,0 +1,168 @@
+/***********************************************************************************************************
+ * Module :main
+ *
+ * File Name :main.c
+ *
+ *Description: source file for the main application
+ *      Author: Doha Eid
+ ***********************************************************************************************************/
+
+#include "app.h"
+
+
+
+
+
+
+
+int main (void)
+{
+
+	/*Initialize the LCD */
+	LCD_init();
+	/* Initialize the UART driver with Baud-rate = 9600 bits/sec */
+	UART_Config uart_ptr={bit_8,disable,bit_1};
+	UART_init(&uart_ptr);
+	/*Initialize timer driver */
+	Timer0_setCallBack(timer_count);
+    Timer_ConfigType configure={Timer0,Normal,F_CPU_1024,No_clock2,0,250};
+	Timer_Init(&configure);
+	/*Display on the lcd welcome for 5 seconds and then display the list */
+	LCD_displayString("Welcome");
+	/*open pin of global interrupt the I-bit*/
+	SREG|=(1<<7);
+	_delay_ms(500);
+	LCD_clearScreen();
+	LCD_displayCharacter('*');
+	LCD_moveCursor(0,1);
+	LCD_displayString("Open");
+	LCD_displayCharacter('-');
+	LCD_moveCursor(0,8);
+    LCD_displayString("Close");
+    LCD_moveCursor(1,0);
+    LCD_displayCharacter('/');
+    LCD_moveCursor(1,1);
+    LCD_displayString("Change Password");
+
+	while (1)
+	{
+		switch(g_step)
+		{
+		/*At step 1 enter the pass twice to save the the pass in eeprom to open the system
+		 *and press on = to send the pass by uart
+		 */
+		case 0:
+			LCD_displayString("Enter the Password");
+			/*get the 5 numbers of pass */
+			key[5]=enter_Password();
+			LCD_moveCursor(1,5);
+			/*send the password to the MCU2 */
+			send_Pass_ToMcu2(key[5]);
+			LCD_clearScreen();
+			LCD_displayString("Password1 is sent ");
+			LCD_clearScreen();
+			/*Re-Enter the pass again to make sure that is the wanted */
+			key[5]=enter_Password();
+			LCD_moveCursor(1,5);
+			/*send the password to the MCU2 */
+			send_Pass_ToMcu2(key[5]);
+			LCD_clearScreen();
+			LCD_displayString("Password2 is sent ");
+			LCD_clearScreen();
+          _delay_ms(500);
+          LCD_clearScreen();
+          g_step=UART_recieveByte();
+           g_step=comp_Password(g_step);
+
+           break;
+           /*
+            * This case to decide what the user nedd
+            * 1.open the door
+            * 2.change the password
+            */
+		case 2:
+			/*polling here until receive that MCU2 is ready*/
+			while(UART_recieveByte()!=M2_READY);
+			LCD_clearScreen();
+			LCD_moveCursor(0,0);
+			LCD_displayString("*:Open ");
+			LCD_moveCursor(1,0);
+			LCD_displayString("-:Change the password");
+			options_list();
+			break;
+			/*
+			 * This case we open the system :
+			 * enter the saved pass if the pass matched with the eeprom {
+			 * open the door and turn on the DC_motor and rotate clock wise  for 15 seconds
+			 * and wait 3 seconds and close the door and rotate the DC_motor Anti clock wise for 15 seconds }
+			 * if the password unmatched their is 3 attempts to enter the correct and if the user does not
+			 * enter the correct one the buzzer will turn on for 60 seconds and
+			 */
+		case 3:
+			LCD_displayString("Enter password");
+			LCD_moveCursor(1,0);
+			key[5]= enter_Password();
+			LCD_moveCursor(1,5);
+		    /*send the password to the MCU2 */
+			send_Pass_ToMcu2(key[5]);
+			LCD_clearScreen();
+
+			/*Receive byte that check the password with the saved in EEPROM*/
+			checker=UART_recieveByte();
+			check_Pass(checker);
+            break;
+            /*
+             * This case change the password by reset the old password and change it
+             */
+		case 4:
+			LCD_displayString("Enter password");
+			LCD_moveCursor(1,0);
+			key[5]= enter_Password();
+			LCD_moveCursor(1,5);
+		    /*send the password to the MCU2 */
+			send_Pass_ToMcu2(key[5]);
+			LCD_clearScreen();
+		   /*Receive byte that check the password with the saved in EEPROM*/
+			checker=UART_recieveByte();
+			/*
+			 * in case unmatched with the save in eeprom display and repeat this case
+			 * in case matched with the saved in eeprom and set new pass
+			 */
+			if (checker==0)
+			{
+				LCD_displayString("Unmatched");
+				_delay_ms(1000);
+				LCD_clearScreen();
+				g_step=UART_recieveByte();
+			}
+			else if (checker==1)
+			{
+				LCD_displayString("Matched");
+				_delay_ms(1000);
+				LCD_clearScreen();
+				g_step=UART_recieveByte();
+			}
+			break ;
+			/*the code will go to this step in step the user entered wrong password for 3 times
+			 * and turn on the buzzer for 60 seconds
+			 * and display warning message
+			 */
+				case 5:
+					LCD_displayString("there is a thief!");
+					g_seconds_required=60;
+					Timer0_setCallBack(timer_count);
+					Timer_ConfigType configure={Timer0,Normal,F_CPU_1024,No_clock2,0,0};
+				    Timer_Init(&configure);
+				    while(g_step!=2);
+				    			break;
+
+		}
+	}
+}
+
+
+
+
+
+
+

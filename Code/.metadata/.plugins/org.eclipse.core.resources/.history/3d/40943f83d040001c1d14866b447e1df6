@@ -1,0 +1,80 @@
+/***********************************************************************************************************
+ * Module :main
+ *
+ * File Name :main.c
+ *
+ *Description: source file for the main application
+ *      Author: Doha Eid
+ ***********************************************************************************************************/
+
+#include "app.h"
+
+int main(void) {
+
+	/*Initialize the LCD */
+	LCD_init();
+	/* Initialize the UART driver with Baud-rate = 9600 bits/sec */
+	UART_Config uart_ptr = { 9600, bit_8, disable, bit_1 };
+	UART_init(&uart_ptr);
+	/*Initialize timer driver */
+	//Timer0_setCallBack(timer_count);
+	//Timer_ConfigType configure = { Timer0, Normal, F_CPU_1024, No_clock2, 0, 0 };
+	//Timer_Init(&configure);
+	/*open pin of global interrupt the I-bit*/
+	SREG |= (1 << 7);
+	/*Display on the lcd welcome for 5 seconds and then display the list */
+	LCD_displayString("HIII");
+	_delay_ms(500);
+	LCD_clearScreen();
+	/*sends to MCU2 that MCU1 is ready to receive data*/
+	//  UART_sendByte(M1_READY);
+	/*receives the step which the code run*/
+	//g_step=UART_recieveByte();
+	g_step = 0;
+	while (1) {
+		switch (g_step) {
+		/*At step 1 enter the pass twice to save the the pass in eeprom to open the system
+		 *and press on = to send the pass by UART
+		 */
+		case 0:
+
+			Enter_Password();
+			if (checking_value == 1) {
+				g_step = 1;
+			} else {
+				LCD_displayString("Unmatched");
+				_delay_ms(1000);
+				LCD_clearScreen();
+				g_step = 0;
+			}
+			LCD_clearScreen();
+
+			break;
+			/*this steps displays that the two passwords sent are matched and saved in EEPROM
+			 * if matched display matched
+			 * and go to case 2
+			 */
+		case 1:
+
+			LCD_displayString("matched!");
+			_delay_ms(500);
+			//	while(UART_recieveByte()!=M2_READY);
+			LCD_moveCursor(1, 0);
+			send_Pass_ToMcu2();
+			LCD_clearScreen();
+			LCD_moveCursor(1, 0);
+			LCD_displayString("pass saved!");
+			_delay_ms(500);
+			g_step = 2;
+			break;
+
+			/*
+			 * This case to decide what the user nedd
+			 * 1.open the door
+			 * 2.change the password
+			 */
+
+		}
+	}
+}
+
